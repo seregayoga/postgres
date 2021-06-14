@@ -71,6 +71,7 @@
 #include "commands/tablecmds.h"
 #include "commands/tablespace.h"
 #include "commands/trigger.h"
+#include "commands/async.h"
 #include "executor/executor.h"
 #include "executor/execPartition.h"
 #include "executor/nodeModifyTable.h"
@@ -1180,6 +1181,7 @@ apply_handle_commit_internal(StringInfo s, LogicalRepCommitData *commit_data)
 		replorigin_session_origin_timestamp = commit_data->committime;
 
 		CommitTransactionCommand();
+		ProcessCompletedNotifies();
 		pgstat_report_stat(false);
 
 		store_flush_position(commit_data->end_lsn);
